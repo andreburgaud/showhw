@@ -202,6 +202,10 @@ func cpu() {
         for _, core := range proc.Cores {
             fmt.Printf("  %v\n", core)
         }
+
+        fmt.Printf("Vendor: %s\n", proc.Vendor)
+        fmt.Printf("Model: %s\n", proc.Model)
+
         if len(proc.Capabilities) > 0 {
             // pretty-print the (large) block of capability strings into rows
             // of 6 capability strings
