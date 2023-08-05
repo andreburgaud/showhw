@@ -4,20 +4,21 @@ import (
     "fmt"
     "math"
     "os"
-    "strings"
+    //"strings"
 
     "github.com/jaypipes/ghw"
+    "github.com/jaypipes/ghw/pkg/unitutil"
 )
 
 
-func product() {
-    product, err := ghw.Product()
-    if err != nil {
-        fmt.Printf("Error getting product info: %v", err)
-    }
+// func product() {
+//     product, err := ghw.Product()
+//     if err != nil {
+//         fmt.Printf("Error getting product info: %v", err)
+//     }
 
-    fmt.Printf("%v\n", product)
-}
+//     fmt.Printf("%v\n", product)
+// }
 
 
 func baseboard() {
@@ -172,8 +173,53 @@ func storage() {
     }
 }
 
+
+
+
+
+
+
+/////////////////
+
+// Product
+
+func product() {
+    title("Product")
+    product, err := ghw.Product(ghw.WithDisableWarnings())
+    if err != nil {
+        fmt.Printf("Error getting product info: %v", err)
+    }
+    fmt.Printf("Name: %s\n", product.Name)
+    fmt.Printf("Vendor: %s\n", product.Vendor)
+}
+
+func cpu() {
+    title("CPU")
+    cpu, err := ghw.CPU(ghw.WithDisableWarnings())
+    if err != nil {
+        fmt.Printf("Error getting CPU info: %v", err)
+    }
+
+    cpu_count := len(cpu.Processors)
+    cpu_string := "processor"
+    if cpu_count > 1 {
+        cpu_string = cpu_string + "s"
+    }
+
+    fmt.Printf("%d %s, ", cpu_count, cpu_string)
+    fmt.Printf("%d cores, ", cpu.TotalCores)
+    fmt.Printf("%d threads\n", cpu.TotalThreads)
+
+    for _, proc := range cpu.Processors {
+        fmt.Printf("Vendor: %s\n", proc.Vendor)
+        fmt.Printf("Model: %s\n", proc.Model)
+    }
+}
+
+
 func memory() {
-    memory, err := ghw.Memory()
+    title("Memory")
+    memory, err := ghw.Memory(ghw.WithDisableWarnings())
     if err != nil {
         fmt.Printf("Error getting memory info: %v", err)
     }
@@ -181,77 +227,46 @@ func memory() {
     fmt.Println(memory.String())
 
     phys := memory.TotalPhysicalBytes
+
+    fmt.Println("Physical Memory %d (bytes)", phys)
     usable := memory.TotalUsableBytes
+    fmt.Println("Usable Memory %d (bytes)", usable)
 
-    fmt.Printf("Physical Memory (bytes): %d\n", phys)
-    fmt.Printf("Usable Memory (bytes): %d\n", usable)
 
-    fmt.Printf("The bootloader consumes %d bytes of RAM\n", phys - usable)
+    unit, unitStr := unitutil.AmountString(phys)
+    total := int64(math.Ceil(float64(phys) / float64(unit)))
+    fmt.Printf("Physical Memory: %d%s\n", total, unitStr)
 }
 
-func cpu() {
-    cpu, err := ghw.CPU()
-    if err != nil {
-        fmt.Printf("Error getting CPU info: %v", err)
-    }
+////////////////
 
-    fmt.Printf("%v\n", cpu)
-
-    for _, proc := range cpu.Processors {
-        fmt.Printf(" %v\n", proc)
-        for _, core := range proc.Cores {
-            fmt.Printf("  %v\n", core)
-        }
-
-        fmt.Printf("Vendor: %s\n", proc.Vendor)
-        fmt.Printf("Model: %s\n", proc.Model)
-
-        if len(proc.Capabilities) > 0 {
-            // pretty-print the (large) block of capability strings into rows
-            // of 6 capability strings
-            rows := int(math.Ceil(float64(len(proc.Capabilities)) / float64(6)))
-            for row := 1; row < rows; row = row + 1 {
-                rowStart := (row * 6) - 1
-                rowEnd := int(math.Min(float64(rowStart+6), float64(len(proc.Capabilities))))
-                rowElems := proc.Capabilities[rowStart:rowEnd]
-                capStr := strings.Join(rowElems, " ")
-                if row == 1 {
-                    fmt.Printf("  capabilities: [%s\n", capStr)
-                } else if rowEnd < len(proc.Capabilities) {
-                    fmt.Printf("                 %s\n", capStr)
-                } else {
-                    fmt.Printf("                 %s]\n", capStr)
-                }
-            }
-        }
-    }
-}
 
 func title(text string) {
     fmt.Printf("\n%s\n", text)
 }
 
 func main() {
-    title("CPU")
-    cpu()
-    title("Memory")
-    memory()
-    title("Storage")
-    storage()
-    title("Topology")
-    topology()
-    title("Network")
-    network()
-    title("PCI")
-    pci()
-    title("GPU")
-    gpu()
-    title("Chassis")
-    chassis()
-    title("BIOS")
-    bios()
-    title("Baseboard")
-    baseboard()
-    title("Product")
+
+    // title("Memory")
+    // memory()
+    // title("Storage")
+    // storage()
+    // title("Topology")
+    // topology()
+    // title("Network")
+    // network()
+    // title("PCI")
+    // pci()
+    // title("GPU")
+    // gpu()
+    // title("Chassis")
+    // chassis()
+    // title("BIOS")
+    // bios()
+    // title("Baseboard")
+    // baseboard()
+
     product()
+    cpu()
+    memory()
 }
