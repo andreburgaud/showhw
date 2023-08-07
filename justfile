@@ -1,12 +1,17 @@
 APP := "showhw"
 
+alias b := build
+alias c := clean
+alias r := run
+alias cc := cross-compile
+
 # Default recipe (this list)
 default:
     @just --list
 
 # Delete generated binaries
 clean:
-    @echo todo
+    rm {{APP}}
 
 # Run local app
 run:
@@ -26,7 +31,6 @@ update:
     go get -u -d ./...
     go mod tidy
 
-# # Install fyne CLI
-# install-fyne:
-#     go install fyne.io/fyne/v2/cmd/fyne@latest
-
+# Cross compile
+cross-compile:
+    ./xbuild.sh {{APP}}
