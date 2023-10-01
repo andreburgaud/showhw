@@ -24,6 +24,11 @@ Disc1     2TB SSD Samsung SSD 980 PRO 2TB
 GPU1      TigerLake-LP GT2 [Iris Xe Graphics] Intel Corporation
 ```
 
+## Notes
+
+`showhw` is not recommnded on Mac OSX as some of the [ghw](https://github.com/jaypipes/ghw) library functions are not implemented and make the tool mostly moot.
+
+
 ## License
 
 [MIT License](/LICENSE)

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math"
+	"os"
 
 	"github.com/fatih/color"
 	"github.com/jaypipes/ghw"
@@ -18,7 +19,7 @@ _\ \ | | | (_) \ V  V / __  /  \  /\  /
 
 const (
 	padding = 10
-	version = "0.1.0"
+	version = "0.2.0"
 )
 
 const (
@@ -32,6 +33,12 @@ const (
 func printInfo(text string) {
 	green := color.New(color.FgHiGreen, color.Bold)
 	green.Print(text)
+}
+
+func printError(format string, a ...any) {
+	color.Set(color.FgHiRed, color.Bold)
+	fmt.Fprintf(os.Stderr, format, a...)
+	color.Unset()
 }
 
 func paddWithSpaces(text string, count int) string {
@@ -72,7 +79,8 @@ func formatSize(size int64) string {
 func gpu() {
 	gpu, err := ghw.GPU()
 	if err != nil {
-		fmt.Printf("Error getting GPU info: %v", err)
+		printError("Error getting GPU info: %v\n", err)
+		return
 	}
 
 	for idx, card := range gpu.GraphicsCards {
@@ -84,7 +92,8 @@ func gpu() {
 func storage() {
 	block, err := ghw.Block()
 	if err != nil {
-		fmt.Printf("Error getting block storage info: %v", err)
+		printError("Error getting block storage info: %v\n", err)
+		return
 	}
 
 	idx := 1
@@ -101,7 +110,8 @@ func storage() {
 func product() {
 	product, err := ghw.Product(ghw.WithDisableWarnings())
 	if err != nil {
-		fmt.Printf("Error getting product info: %v", err)
+		printError("Error getting product info: %v", err)
+		return
 	}
 	printInfo(paddWithSpaces("Product", padding))
 	fmt.Printf("%s %s\n", product.Name, product.Vendor)
@@ -110,7 +120,8 @@ func product() {
 func cpu() {
 	cpu, err := ghw.CPU(ghw.WithDisableWarnings())
 	if err != nil {
-		fmt.Printf("Error getting CPU info: %v", err)
+		printError("Error getting CPU info: %v\n", err)
+		return
 	}
 	for idx, proc := range cpu.Processors {
 		printInfo(paddWithSpaces(fmt.Sprintf("CPU%d", idx+1), padding))
@@ -121,7 +132,8 @@ func cpu() {
 func memory() {
 	memory, err := ghw.Memory(ghw.WithDisableWarnings())
 	if err != nil {
-		fmt.Printf("Error getting memory info: %v", err)
+		printError("Error getting memory info: %v\n", err)
+		return
 	}
 	printInfo(paddWithSpaces("Memory", padding))
 	fmt.Printf("%s\n", formatSize(memory.TotalUsableBytes))
