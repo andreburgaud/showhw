@@ -8,7 +8,7 @@ import (
 	"github.com/jaypipes/ghw"
 )
 
-const banner = ` __ _                          __    __ 
+const banner = ` __ _                          __    __
 / _\ |__   _____      __/\  /\/ / /\ \ \
 \ \| '_ \ / _ \ \ /\ / / /_/ /\ \/  \/ /
 _\ \ | | | (_) \ V  V / __  /  \  /\  /
@@ -16,7 +16,10 @@ _\ \ | | | (_) \ V  V / __  /  \  /\  /
 
 `
 
-const padding = 10
+const (
+	padding = 10
+	version = "0.1.0"
+)
 
 const (
 	KB = iota + 1
@@ -37,6 +40,8 @@ func paddWithSpaces(text string, count int) string {
 
 func showBanner() {
 	printInfo(banner)
+	printInfo(fmt.Sprintf("version %s", version))
+	fmt.Print("\n\n")
 }
 
 func storageUnit(unit float64) float64 {
@@ -72,7 +77,7 @@ func gpu() {
 
 	for idx, card := range gpu.GraphicsCards {
 		printInfo(paddWithSpaces(fmt.Sprintf("GPU%d", idx+1), padding))
-		fmt.Printf(": %s %s\n", card.DeviceInfo.Product.Name, card.DeviceInfo.Vendor.Name)
+		fmt.Printf("%s %s\n", card.DeviceInfo.Product.Name, card.DeviceInfo.Vendor.Name)
 	}
 }
 
@@ -88,7 +93,7 @@ func storage() {
 			continue
 		}
 		printInfo(paddWithSpaces(fmt.Sprintf("Disc%d", idx), padding))
-		fmt.Printf(": %s %s %s\n", formatSize(int64(disk.SizeBytes)), disk.DriveType, disk.Model)
+		fmt.Printf("%s %s %s\n", formatSize(int64(disk.SizeBytes)), disk.DriveType, disk.Model)
 		idx += 1
 	}
 }
@@ -99,7 +104,7 @@ func product() {
 		fmt.Printf("Error getting product info: %v", err)
 	}
 	printInfo(paddWithSpaces("Product", padding))
-	fmt.Printf(": %s %s\n", product.Name, product.Vendor)
+	fmt.Printf("%s %s\n", product.Name, product.Vendor)
 }
 
 func cpu() {
@@ -109,7 +114,7 @@ func cpu() {
 	}
 	for idx, proc := range cpu.Processors {
 		printInfo(paddWithSpaces(fmt.Sprintf("CPU%d", idx+1), padding))
-		fmt.Printf(": %s (%d cores, %d threads)\n", proc.Model, cpu.TotalCores, cpu.TotalThreads)
+		fmt.Printf("%s (%d cores, %d threads)\n", proc.Model, cpu.TotalCores, cpu.TotalThreads)
 	}
 }
 
@@ -119,7 +124,7 @@ func memory() {
 		fmt.Printf("Error getting memory info: %v", err)
 	}
 	printInfo(paddWithSpaces("Memory", padding))
-	fmt.Printf(": %s\n", formatSize(memory.TotalUsableBytes))
+	fmt.Printf("%s\n", formatSize(memory.TotalUsableBytes))
 }
 
 func main() {

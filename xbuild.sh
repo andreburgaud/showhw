@@ -22,7 +22,7 @@ do
     goos_goarch=($platform)
     goos=${goos_goarch[0]}
     goarch=${goos_goarch[1]}
-    exe="${PACKAGE}-${goos}-${goarch}"
+    exe="${PACKAGE}_${goos}_${goarch}"
 
     if [ $goos = "windows" ]; then
        exe+=".exe"
