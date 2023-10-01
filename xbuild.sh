@@ -16,7 +16,7 @@ fi
 mkdir -p $DIST_DIR
 
 #declare -a platforms=("darwin amd64" "darwin arm64" "linux amd64" "linux arm" "linux arm64" "windows amd64" "windows arm64")
-declare -a platforms=("linux amd64" "linux arm" "linux arm64" "windows amd64" "windows arm64")
+declare -a platforms=("linux amd64" "windows amd64")
 
 for platform in "${platforms[@]}"
 do
