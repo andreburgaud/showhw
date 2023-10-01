@@ -26,8 +26,7 @@ GPU1      TigerLake-LP GT2 [Iris Xe Graphics] Intel Corporation
 
 ## Notes
 
-`showhw` is not recommnded on Mac OSX as some of the [ghw](https://github.com/jaypipes/ghw) library functions are not implemented and make the tool mostly moot.
-
+`showhw` should work well on 64-bit Linux and 64-bit Windows. Tests on Mac OSX and ARMv7 (Raspberry Pi 3) show only partial success.
 
 ## License
 
